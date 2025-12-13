@@ -1,3 +1,4 @@
+// db/schema.ts
 import { integer, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 
 export const productsTable = pgTable("Products", {
@@ -5,7 +6,19 @@ export const productsTable = pgTable("Products", {
   name: varchar({ length: 255 }).notNull(),
   description: varchar({ length: 500 }).notNull(),
   price: integer().notNull(),
+  category: varchar({ length: 100 }).notNull(),
   imageUrl: varchar({ length: 255 }).notNull(),
+  createdAt: timestamp({withTimezone:true}).notNull().defaultNow(),
+  updatedAt: timestamp({withTimezone:true}).notNull().defaultNow().$onUpdate(() => new Date()),
+});
+
+// Add Admin table
+export const adminsTable = pgTable("Admins", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  email: varchar({ length: 255 }).notNull().unique(),
+  username: varchar({ length: 255 }).notNull(),
+  password: varchar({ length: 255 }).notNull(), // hashed password
+  role: varchar({ length: 50 }).notNull().default("admin"),
   createdAt: timestamp({withTimezone:true}).notNull().defaultNow(),
   updatedAt: timestamp({withTimezone:true}).notNull().defaultNow().$onUpdate(() => new Date()),
 });

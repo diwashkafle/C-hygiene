@@ -15,6 +15,13 @@
       "when": 1765534077139,
       "tag": "0001_awesome_rocket_racer",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1765610766190,
+      "tag": "0002_sturdy_joseph",
+      "breakpoints": true
     }
   ]
 }
