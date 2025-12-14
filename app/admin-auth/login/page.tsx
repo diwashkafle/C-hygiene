@@ -1,4 +1,3 @@
-// app/admin/login/page.tsx
 import AdminLogin from '@/components/Admin/sign-in'; 
 import { Metadata } from 'next';
 

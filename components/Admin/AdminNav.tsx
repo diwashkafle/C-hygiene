@@ -1,4 +1,3 @@
-// app/admin/components/AdminNav.tsx
 "use client";
 import Link from "next/link";
 

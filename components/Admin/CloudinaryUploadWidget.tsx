@@ -1,4 +1,3 @@
-// components/Admin/CloudinaryUploadWidget.tsx
 "use client";
 
 import { CldUploadWidget, CloudinaryUploadWidgetResults } from "next-cloudinary";
@@ -55,7 +54,6 @@ export default function CloudinaryUploadWidget({ value, onChange }: Props) {
         )}
       </CldUploadWidget>
 
-      {/* Preview */}
       {value && (
         <div className="relative w-full h-48 rounded-lg overflow-hidden border border-gray-200">
           <Image
@@ -75,7 +73,6 @@ export default function CloudinaryUploadWidget({ value, onChange }: Props) {
         </div>
       )}
 
-      {/* URL Input as fallback */}
       <div className="text-sm text-gray-500 text-center">वा</div>
       <input
         type="url"

@@ -1,4 +1,3 @@
-// components/admin/AdminLogin.tsx
 'use client';
 
 import React, { useState, FormEvent } from 'react';
@@ -22,22 +21,18 @@ const AdminLogin: React.FC = () => {
     setLoading(true);
 
     try {
-      // Using NextAuth signIn
       const result = await signIn('credentials', {
-        redirect: false, // Prevent automatic redirect to handle errors manually
+        redirect: false, 
         email,
         password,
       });
 
       if (result?.error) {
-        // लग-इन असफल भएमा
         setError('इमेल वा पासवर्ड मिलेन। कृपया पुन: प्रयास गर्नुहोस्।');
         setLoading(false);
       } else {
-        // लग-इन सफल भएमा
-        // No need to set localStorage manually anymore, NextAuth handles the session cookie
         router.push('/admin/dashboard');
-        router.refresh(); // Ensure the dashboard loads with the new session
+        router.refresh();
       }
     } catch (err) {
       setError('सर्भरमा समस्या आयो।: '+err);
@@ -49,7 +44,6 @@ const AdminLogin: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 font-sans">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden">
         
-        {/* Header Section */}
         <div className="p-8 text-center" style={{ backgroundColor: themeColor }}>
           <div className="mx-auto bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mb-4 backdrop-blur-sm">
             <Lock className="w-8 h-8 text-white" />
@@ -60,11 +54,9 @@ const AdminLogin: React.FC = () => {
           </p>
         </div>
 
-        {/* Form Section */}
         <div className="p-8">
           <form onSubmit={handleLogin} className="space-y-6">
             
-            {/* Error Message */}
             {error && (
               <div className="bg-red-50 border-l-4 border-red-500 p-4 flex items-start gap-3 rounded-r">
                 <AlertCircle className="w-5 h-5 text-red-500 mt-0.5" />
@@ -72,7 +64,6 @@ const AdminLogin: React.FC = () => {
               </div>
             )}
 
-            {/* Email Input */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 इमेल ठेगाना
@@ -92,7 +83,6 @@ const AdminLogin: React.FC = () => {
               </div>
             </div>
 
-            {/* Password Input */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 पासवर्ड
@@ -119,7 +109,6 @@ const AdminLogin: React.FC = () => {
               </div>
             </div>
 
-            {/* Login Button */}
             <button
               type="submit"
               disabled={loading}

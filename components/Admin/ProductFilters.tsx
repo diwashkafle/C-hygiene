@@ -1,4 +1,3 @@
-// components/Admin/ProductFilters.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -18,7 +17,6 @@ export default function ProductFilters({ products, categories, onFilterChange }:
   useEffect(() => {
     let filtered = [...products];
 
-    // Search filter
     if (searchTerm) {
       filtered = filtered.filter(
         (p) =>
@@ -27,12 +25,10 @@ export default function ProductFilters({ products, categories, onFilterChange }:
       );
     }
 
-    // Category filter
     if (selectedCategoryId !== "all") {
       filtered = filtered.filter((p) => p.categoryId === parseInt(selectedCategoryId));
     }
 
-    // Date filter
     const now = new Date();
     if (dateFilter === "आज") {
       filtered = filtered.filter((p) => {
@@ -53,7 +49,6 @@ export default function ProductFilters({ products, categories, onFilterChange }:
   return (
     <div className="bg-white rounded-2xl shadow-sm p-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Search */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             खोज्नुहोस्
@@ -67,7 +62,6 @@ export default function ProductFilters({ products, categories, onFilterChange }:
           />
         </div>
 
-        {/* Category */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             श्रेणी
@@ -86,7 +80,6 @@ export default function ProductFilters({ products, categories, onFilterChange }:
           </select>
         </div>
 
-        {/* Date */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             मिति अनुसार

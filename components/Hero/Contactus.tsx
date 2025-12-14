@@ -8,7 +8,6 @@ const ContactPage = () => {
   return (
     <div id='contact' className="min-h-screen flex flex-col font-sans text-gray-800">
       
-      {/* Header Section */}
       <div 
         className="py-16 px-6 text-center text-white"
         style={{ backgroundColor: themeColor }}
@@ -19,14 +18,11 @@ const ContactPage = () => {
         </p>
       </div>
 
-      {/* Main Content: Contact Information */}
       <div className="grow w-full px-4 sm:px-6 py-12 sm:py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           
-          {/* Contact Cards - Responsive Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             
-            {/* Address */}
             <div className="flex flex-col items-center text-center p-8 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
               <div className="p-4 bg-green-50 rounded-full mb-4">
                 <MapPin className="w-7 h-7" style={{ color: themeColor }} />
@@ -41,7 +37,6 @@ const ContactPage = () => {
               </p>
             </div>
 
-            {/* Phone */}
             <div className="flex flex-col items-center text-center p-8 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
               <div className="p-4 bg-green-50 rounded-full mb-4">
                 <Phone className="w-7 h-7" style={{ color: themeColor }} />
@@ -57,7 +52,6 @@ const ContactPage = () => {
               </a>
             </div>
 
-            {/* WhatsApp */}
             <div className="flex flex-col items-center text-center p-8 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
               <div className="p-4 bg-green-50 rounded-full mb-4">
                 <MessageCircle className="w-7 h-7" style={{ color: themeColor }} />
@@ -76,7 +70,6 @@ const ContactPage = () => {
               <p className="text-sm text-gray-500">सिधै म्यासेज गर्नुहोस्</p>
             </div>
 
-            {/* Email */}
             <div className="flex flex-col items-center text-center p-8 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
               <div className="p-4 bg-green-50 rounded-full mb-4">
                 <Mail className="w-7 h-7" style={{ color: themeColor }} />

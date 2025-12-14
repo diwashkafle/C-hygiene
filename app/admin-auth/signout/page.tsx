@@ -1,4 +1,3 @@
-// app/admin-auth/signout/page.tsx
 "use client";
 
 import { signOut } from "next-auth/react";

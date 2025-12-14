@@ -7,14 +7,13 @@ import { IoLogoWhatsapp } from "react-icons/io";
 
 const  ProductPage = async () => {
   const themeColor = '#0C8033';
-  const phoneNumber = '9779860571937'; // तपाईंको फोन नम्बर
+  const phoneNumber = '9779860571937'; 
 
 const [productsResult] = await Promise.all([
     getProducts(),
   ]);  
  
 
-  // WhatsApp लिंक बनाउने फंक्सन
   const createWhatsAppLink = (productName:string) => {
     const message = `नमस्ते, मलाई ${productName} को बारेमा थप जानकारी चाहिएको थियो वा अर्डर गर्न चाहन्छु।`;
     const encodedMessage = encodeURIComponent(message);
@@ -24,7 +23,6 @@ const [productsResult] = await Promise.all([
   return (
     <section className="bg-gray-50 min-h-screen font-sans text-gray-800">
       
-      {/* Header Section */}
       <div 
         className="py-8 px-6 text-center text-white"
         style={{ backgroundColor: themeColor }}
@@ -41,7 +39,6 @@ const [productsResult] = await Promise.all([
       </div>
       
 
-      {/* Product Grid */}
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {productsResult?.data?.map((product) => (
@@ -49,7 +46,6 @@ const [productsResult] = await Promise.all([
               key={product.id} 
               className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col"
             >
-              {/* Product Image Placeholder */}
               <div className="h-48 bg-gray-200 relative group">
                 <Image 
                   src={product.imageUrl} 
@@ -63,7 +59,6 @@ const [productsResult] = await Promise.all([
                 </div>
               </div>
 
-              {/* Product Details */}
               <div className="p-6 flex flex-col grow">
                <section className='flex flex-col my-2'>
                 <div className='flex justify-between items-center'>
@@ -81,7 +76,6 @@ const [productsResult] = await Promise.all([
                 </div>
                </section>
 
-                {/* Action Button - Pushes to bottom */}
                 <div className="mt-auto">
                   <a 
                     href={createWhatsAppLink(product.name)}
@@ -100,7 +94,6 @@ const [productsResult] = await Promise.all([
         </div>
       </div>
 
-       {/* Custom Order Section */}
        <div className="max-w-4xl mx-auto px-6 pb-16 text-center">
         <div className="bg-white p-8 rounded-2xl border-2 border-dashed border-green-200">
           <h3 className="text-2xl font-bold mb-3">अर्डर गर्न कृपया WhatsApp मा क्लिक गर्नुहोस्</h3>

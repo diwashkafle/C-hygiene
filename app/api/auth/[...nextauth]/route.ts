@@ -1,4 +1,3 @@
-// app/api/auth/[...nextauth]/route.ts
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "@/db";
@@ -50,8 +49,8 @@ export const authOptions: AuthOptions = {
     })
   ],
   pages: {
-    signIn: '/admin-auth/login',  // ← Updated to your new path
-    error: '/admin-auth/login',   // ← Also update error redirect
+    signIn: '/admin-auth/login',  
+    error: '/admin-auth/login',
   },
   session: {
     strategy: "jwt",

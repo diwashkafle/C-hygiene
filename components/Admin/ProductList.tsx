@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Product } from "@/lib/actions/products"; // Ensure this import points to your type
+import { Product } from "@/lib/actions/products"; 
 import { Edit } from "lucide-react";
 import { ProductDeleteButton } from "./ProductDeleteButton";
 
@@ -12,17 +12,13 @@ type Props = {
 };
 
 export default function ProductList({ products, onEdit }: Props) {
-  // 1. Initialize local state with server data
   const [optimisticProducts, setOptimisticProducts] = useState(products);
 
-  // 2. Sync local state whenever server data updates (e.g., after router.refresh())
   useEffect(() => {
     setOptimisticProducts(products);
   }, [products]);
 
-  // 3. The Optimistic Updater Function
   const handleOptimisticDelete = (deletedId: number) => {
-    // Immediately filter out the deleted item from the view
     setOptimisticProducts((prev) => prev.filter((p) => p.id !== deletedId));
   };
 
@@ -49,7 +45,6 @@ export default function ProductList({ products, onEdit }: Props) {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {/* Map over optimisticProducts instead of products */}
             {optimisticProducts.map((product) => (
               <tr key={product.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -88,7 +83,6 @@ export default function ProductList({ products, onEdit }: Props) {
                     सम्पादन
                   </button>
                   
-                  {/* Pass the handler down */}
                   <ProductDeleteButton 
                     productId={product.id} 
                     onOptimisticDelete={handleOptimisticDelete} 

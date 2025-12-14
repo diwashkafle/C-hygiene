@@ -16,7 +16,6 @@ import {
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner"
 
-// 👇 1. UPDATE THE PROPS HERE so TypeScript stops yelling
 export function ProductDeleteButton({
   productId,
   onOptimisticDelete, 
@@ -30,10 +29,8 @@ export function ProductDeleteButton({
 
   const handleDelete = async () => {
     setIsLoading(true);
-    setOpen(false); // Close dialog instantly
+    setOpen(false); 
 
-    // 👇 2. THIS IS WHERE IT IS USED
-    // This removes the row from the table immediately
     onOptimisticDelete(productId); 
     
     try {

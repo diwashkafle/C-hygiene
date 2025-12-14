@@ -1,4 +1,3 @@
-// components/Admin/ProductFormModal.tsx
 "use client";
 
 import { useState } from "react";
@@ -87,7 +86,6 @@ export default function ProductFormModal({ product, categories, onClose }: Props
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               उत्पादनको नाम * 
@@ -102,7 +100,6 @@ export default function ProductFormModal({ product, categories, onClose }: Props
             />
           </div>
 
-          {/* Description */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               विवरण *
@@ -117,7 +114,6 @@ export default function ProductFormModal({ product, categories, onClose }: Props
             />
           </div>
 
-          {/* Price and Category */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -205,7 +201,6 @@ export default function ProductFormModal({ product, categories, onClose }: Props
             </div>
           </div>
 
-          {/* Image Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               उत्पादनको फोटो *
@@ -216,7 +211,6 @@ export default function ProductFormModal({ product, categories, onClose }: Props
             />
           </div>
 
-          {/* Actions */}
           <div className="flex justify-end space-x-3 pt-4">
             <button
               type="button"

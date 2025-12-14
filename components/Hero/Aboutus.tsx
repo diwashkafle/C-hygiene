@@ -28,7 +28,6 @@ const AboutUs = () => {
 
   return (
     <section id='about' className="bg-white text-gray-800 font-sans">
-      {/* Hero Section */}
       <div 
         className="relative py-20 px-6 text-center"
         style={{ backgroundColor: themeColor }}
@@ -43,7 +42,6 @@ const AboutUs = () => {
         </div>
       </div>
 
-      {/* Mission Section */}
       <div className="max-w-6xl mx-auto px-6 py-16">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
@@ -69,7 +67,6 @@ const AboutUs = () => {
         </div>
       </div>
 
-      {/* Services Grid */}
       <div className="bg-gray-50 py-16 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">

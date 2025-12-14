@@ -1,9 +1,7 @@
-// lib/cloudinary.ts
 "use server";
 
 import { v2 as cloudinary } from "cloudinary";
 
-// Configure Cloudinary
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -17,8 +15,7 @@ cloudinary.config({
  */
 export async function getPublicIdFromUrl(url: string): Promise<string | null> {
   try {
-    // Check if it's a Cloudinary URL
-    if (!url.includes("res.cloudinary.com")) {
+      if (!url.includes("res.cloudinary.com")) {
       return null;
     }
 
@@ -31,13 +28,10 @@ export async function getPublicIdFromUrl(url: string): Promise<string | null> {
       return null;
     }
 
-    // Get everything after 'upload' and possible version (v1234567)
     let publicIdPart = parts.slice(uploadIndex + 1).join("/");
     
-    // Remove version if present (starts with v followed by numbers)
     publicIdPart = publicIdPart.replace(/^v\d+\//, "");
     
-    // Remove file extension
     const publicId = publicIdPart.replace(/\.[^.]+$/, "");
     
     return publicId;
@@ -47,9 +41,7 @@ export async function getPublicIdFromUrl(url: string): Promise<string | null> {
   }
 }
 
-/**
- * Delete image from Cloudinary
- */
+
 export async function deleteCloudinaryImage(publicId: string): Promise<{ success: boolean; error?: string }> {
   try {
     const result = await cloudinary.uploader.destroy(publicId);
@@ -65,14 +57,11 @@ export async function deleteCloudinaryImage(publicId: string): Promise<{ success
   }
 }
 
-/**
- * Delete image from Cloudinary using URL
- */
+
 export async function deleteCloudinaryImageByUrl(url: string): Promise<{ success: boolean; error?: string }> {
   const publicId = await getPublicIdFromUrl(url);
   
   if (!publicId) {
-    // Not a Cloudinary URL, skip deletion
     return { success: true };
   }
 

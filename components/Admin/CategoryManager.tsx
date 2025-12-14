@@ -47,7 +47,6 @@ export default function CategoryManager({ categories, onClose }: Props) {
         </div>
 
         <div className="p-6 space-y-4">
-          {/* Add New Category */}
           <div className="flex gap-2">
             <input
               type="text"
@@ -66,7 +65,6 @@ export default function CategoryManager({ categories, onClose }: Props) {
             </button>
           </div>
 
-          {/* Categories List */}
           <div className="space-y-2 max-h-60 overflow-y-auto">
             {categories.map((category) => (
               <div

@@ -1,4 +1,3 @@
-// components/Admin/DashboardClient.tsx
 "use client";
 
 import { useState, useEffect } from "react"; // ✅ Removed useCallback
@@ -9,7 +8,6 @@ import ProductFilters from "./ProductFilters";
 import ProductFormModal from "./ProductFormModal";
 import CategoryManager from "./CategoryManager";
 import { MenuSquare, PackagePlus } from "lucide-react";
-import { toast } from "sonner"
 
 type Props = {
   initialProducts: Product[];
@@ -34,7 +32,6 @@ export default function DashboardClient({ initialProducts, categories }: Props) 
     setShowForm(true);
   };
 
-  // ✅ No useCallback needed - simple functions
   const handleCloseForm = () => {
     setShowForm(false);
     setEditingProduct(null);

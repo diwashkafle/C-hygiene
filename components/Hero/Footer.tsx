@@ -8,7 +8,6 @@ const Footer = () => {
      <footer className="bg-gray-900 text-white">
         <div className="max-w-6xl mx-auto px-6 py-12">
           <div className="flex flex-col items-center md:flex-row md:justify-between gap-8">
-            {/* Company Info */}
             <Link href={"/"}>
             <div className='w-full flex flex-col items-center md:items-start'>
                 <Image
@@ -22,7 +21,6 @@ const Footer = () => {
             </div>
             </Link>
             
-            {/* Quick Links */}
             <div>
               <h3 className="text-lg font-bold mb-4 text-green-400">उपयोगी लिङ्कहरू</h3>
               <ul className="space-y-2 text-sm text-gray-300">
@@ -34,7 +32,6 @@ const Footer = () => {
               </ul>
             </div>
 
-            {/* Location */}
             <div className='flex flex-col items-center md:items-start'>
               <h3 className="text-lg font-bold mb-4 text-green-400">ठेगाना</h3>
               <ul className="space-y-2 text-sm text-gray-300">
@@ -49,7 +46,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Copyright Bar (In English as requested) */}
         <div className="border-t border-gray-800 bg-black py-4 px-6 text-center">
           <p className="text-sm text-gray-500">
             &copy; {new Date().getFullYear()} C. Hygiene Industries Pvt. Ltd. All rights reserved.

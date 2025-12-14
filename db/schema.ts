@@ -1,4 +1,3 @@
-// db/schema.ts
 import { integer, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 
 export const categoriesTable = pgTable("Categories", {
@@ -12,7 +11,7 @@ export const productsTable = pgTable("Products", {
   name: varchar({ length: 255 }).notNull(),
   description: varchar({ length: 500 }).notNull(),
   price: integer().notNull(),
-  categoryId: integer().notNull().references(() => categoriesTable.id, { onDelete: 'restrict' }), // Changed to categoryId
+  categoryId: integer().notNull().references(() => categoriesTable.id, { onDelete: 'restrict' }),
   imageUrl: varchar({ length: 255 }).notNull(),
   createdAt: timestamp({withTimezone:true}).notNull().defaultNow(),
   updatedAt: timestamp({withTimezone:true}).notNull().defaultNow().$onUpdate(() => new Date()),
