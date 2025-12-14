@@ -30,7 +30,7 @@ const Footer = () => {
                 <li><a href="#about" className="hover:text-white">हाम्रो बारेमा (About Us)</a></li>
                 <li><a href="/C-organic" className="hover:text-white">उत्पादनहरू (Products)</a></li>
                 <li><a href="#contact" className="hover:text-white">सम्पर्क (Contact)</a></li>
-                <li><a href="/admin/dashboard" className="hover:text-white">प्रवेश (Admin Login)</a></li>
+                <li><a href="/admin/dashboard" className="hover:text-white">प्रवेश (Dashboard)</a></li>
               </ul>
             </div>
 

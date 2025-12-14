@@ -4,6 +4,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import AdminNav from "@/components/Admin/AdminNav";
 import { MoveLeft } from "lucide-react";
 import Link from "next/link";
+import { Toaster } from "@/components/ui/sonner";
 
 export default async function DashboardLayout({
   children,
@@ -27,6 +28,7 @@ export default async function DashboardLayout({
        </Link>
         {children}
       </main>
+       <Toaster />
     </div>
   );
 }

@@ -65,14 +65,21 @@ const [productsResult] = await Promise.all([
 
               {/* Product Details */}
               <div className="p-6 flex flex-col grow">
-                <h3 className="text-xl font-bold mb-2 text-gray-800 line-clamp-1">
+               <section className='flex flex-col my-2'>
+                <div className='flex justify-between items-center'>
+                   <h3 className="text-xl font-bold mb-2 text-gray-800 line-clamp-1">
                   {product.name}
                 </h3>
                 
-                <div className="flex items-center space-x-2 text-gray-600 mb-6 mt-1">
+                <div className="flex items-center space-x-2 text-gray-600 mt-1">
                   <Tag size={18} style={{ color: themeColor }} />
                   <span className="font-medium text-lg">रु. {product.price}</span>
                 </div>
+                </div>
+                <div>
+                  <p className='text-gray-600'>{product.description.length>100 ? product.description.slice(0, 100) + "..." : product.description}</p>
+                </div>
+               </section>
 
                 {/* Action Button - Pushes to bottom */}
                 <div className="mt-auto">

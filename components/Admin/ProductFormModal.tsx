@@ -6,6 +6,7 @@ import { createProduct, updateProduct, Product, Category, createCategory } from 
 import { X, Plus } from "lucide-react";
 import CloudinaryUploadWidget from "./CloudinaryUploadWidget";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner"
 
 type Props = {
   product: Product | null;
@@ -38,7 +39,7 @@ export default function ProductFormModal({ product, categories, onClose }: Props
       setShowNewCategory(false);
       router.refresh();
     } else {
-      alert(result.error || "Failed to create category");
+      toast.error(result.error || "Failed to create category");
     }
     setIsCreatingCategory(false);
   };
@@ -47,7 +48,7 @@ export default function ProductFormModal({ product, categories, onClose }: Props
     e.preventDefault();
     
     if (!imageUrl) {
-      alert("कृपया फोटो अपलोड गर्नुहोस् वा URL राख्नुहोस्");
+      toast.error("कृपया फोटो अपलोड गर्नुहोस् वा URL राख्नुहोस्");
       return;
     }
 
@@ -60,13 +61,14 @@ export default function ProductFormModal({ product, categories, onClose }: Props
       ? await updateProduct(product.id, formData)
       : await createProduct(formData);
 
+      setIsSubmitting(false);
+
     if (result.success) {
+      toast.success(`उत्पादन ${product ? "अपडेट" : "सिर्जना"} सफल भयो`);
       onClose();
     } else {
-      alert(result.error);
+      toast.error(result.error || "Failed to create/update product");
     }
-
-    setIsSubmitting(false);
   };
 
   return (

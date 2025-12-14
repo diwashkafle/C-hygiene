@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { productsTable, categoriesTable } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { deleteCloudinaryImageByUrl } from "@/lib/cloudinary";
 
 export type Category = {
   id: number;
@@ -47,7 +48,7 @@ export async function createCategory(name: string) {
       .values({ name })
       .returning();
 
-    revalidatePath("/admin/dashboard");
+   revalidatePath("/(protected)/admin/dashboard", "page");
     return { success: true, data: newCategory };
   } catch (error) {
     console.error("Create category error:", error);
@@ -60,7 +61,7 @@ export async function deleteCategory(id: number) {
   try {
     await db.delete(categoriesTable).where(eq(categoriesTable.id, id));
 
-    revalidatePath("/admin/dashboard");
+    revalidatePath("/(protected)/admin/dashboard", "page"); 
     return { success: true, message: "Category deleted successfully" };
   } catch (error) {
     console.error("Delete category error:", error);
@@ -112,7 +113,7 @@ export async function createProduct(formData: FormData) {
       imageUrl,
     }).returning();
 
-    revalidatePath("/admin/dashboard");
+   revalidatePath("/(protected)/admin/dashboard", "page"); 
     return { success: true, message: "Product created successfully",date:newProduct} ;
   } catch (error) {
     console.error("Create product error:", error);
@@ -121,6 +122,8 @@ export async function createProduct(formData: FormData) {
   }
 }
 
+// lib/actions/products.ts
+
 // Update product
 export async function updateProduct(id: number, formData: FormData) {
   try {
@@ -128,22 +131,42 @@ export async function updateProduct(id: number, formData: FormData) {
     const description = formData.get("description") as string;
     const price = parseInt(formData.get("price") as string);
     const categoryId = parseInt(formData.get("categoryId") as string);
-    const imageUrl = formData.get("imageUrl") as string;
+    const newImageUrl = formData.get("imageUrl") as string;
 
-    const [updatedProduct] =await db
+    // 1. Get old product data
+    const [oldProduct] = await db
+      .select()
+      .from(productsTable)
+      .where(eq(productsTable.id, id))
+      .limit(1);
+
+    if (!oldProduct) {
+      return { success: false, error: "Product not found" };
+    }
+
+    // 2. Update product
+    const [updatedProduct] = await db
       .update(productsTable)
       .set({
         name,
         description,
         price,
         categoryId,
-        imageUrl,
+        imageUrl: newImageUrl,
         updatedAt: new Date(),
       })
-      .where(eq(productsTable.id, id)).returning();
+      .where(eq(productsTable.id, id))
+      .returning();
 
-    revalidatePath("/admin/dashboard");
-    return { success: true, message: "Product updated successfully", date: updatedProduct };
+    // 3. If image changed, delete old image from Cloudinary
+    if (oldProduct.imageUrl !== newImageUrl) {
+      deleteCloudinaryImageByUrl(oldProduct.imageUrl).catch((error) => {
+        console.error("Failed to delete old image from Cloudinary:", error);
+      });
+    }
+
+    revalidatePath("/(protected)/admin/dashboard", "page");
+    return { success: true, message: "Product updated successfully", data: updatedProduct };
   } catch (error) {
     console.error("Update product error:", error);
     return { success: false, error: "Failed to update product" };
@@ -153,9 +176,28 @@ export async function updateProduct(id: number, formData: FormData) {
 // Delete product
 export async function deleteProduct(id: number) {
   try {
+    // 1. First, get the product to retrieve the image URL
+    const [product] = await db
+      .select()
+      .from(productsTable)
+      .where(eq(productsTable.id, id))
+      .limit(1);
+
+    if (!product) {
+      return { success: false, error: "Product not found" };
+    }
+
+    // 2. Delete from database
     await db.delete(productsTable).where(eq(productsTable.id, id));
 
-    revalidatePath("/admin/dashboard");
+    // 3. Delete image from Cloudinary (don't await - fire and forget)
+    // This prevents blocking the user if Cloudinary is slow
+    deleteCloudinaryImageByUrl(product.imageUrl).catch((error) => {
+      console.error("Failed to delete image from Cloudinary:", error);
+      // Don't fail the whole operation if image deletion fails
+    });
+
+    revalidatePath("/(protected)/admin/dashboard", "page");
     return { success: true, message: "Product deleted successfully" };
   } catch (error) {
     console.error("Delete product error:", error);

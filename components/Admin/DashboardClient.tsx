@@ -1,6 +1,7 @@
+// components/Admin/DashboardClient.tsx
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useEffect } from "react"; // ✅ Removed useCallback
 import { useRouter } from "next/navigation";
 import { Product, Category } from "@/lib/actions/products";
 import ProductList from "./ProductList";
@@ -8,7 +9,7 @@ import ProductFilters from "./ProductFilters";
 import ProductFormModal from "./ProductFormModal";
 import CategoryManager from "./CategoryManager";
 import { MenuSquare, PackagePlus } from "lucide-react";
-
+import { toast } from "sonner"
 
 type Props = {
   initialProducts: Product[];
@@ -23,26 +24,30 @@ export default function DashboardClient({ initialProducts, categories }: Props) 
   const [showForm, setShowForm] = useState(false);
   const [showCategoryManager, setShowCategoryManager] = useState(false);
 
+  useEffect(() => {
+    setProducts(initialProducts);
+    setFilteredProducts(initialProducts);
+  }, [initialProducts]);
+
   const handleEdit = (product: Product) => {
     setEditingProduct(product);
     setShowForm(true);
-    router.refresh(); 
   };
 
-  const handleCloseForm = useCallback(() => {
+  // ✅ No useCallback needed - simple functions
+  const handleCloseForm = () => {
     setShowForm(false);
     setEditingProduct(null);
-    router.refresh(); // ✅ Refresh to get latest data
-  }, [router]);
+    router.refresh();
+  };
 
-  const handleCloseCategoryManager = useCallback(() => {
+  const handleCloseCategoryManager = () => {
     setShowCategoryManager(false);
-    router.refresh(); // ✅ Refresh to get latest categories
-  }, [router]);
+    router.refresh();
+  };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex justify-between px-2 items-center">
         <h2 className="sm:text-2xl text-xl font-bold text-gray-900">उत्पादन व्यवस्थापन</h2>
         <div className="flex gap-4">
@@ -50,19 +55,19 @@ export default function DashboardClient({ initialProducts, categories }: Props) 
             onClick={() => setShowCategoryManager(true)}
             className="bg-gray-600 items-center flex gap-1 sm:gap-4 text-white px-4 py-2 rounded-xl hover:brightness-110 transition-all"
           >
-            <MenuSquare className="" /><span className="hidden sm:flex">श्रेणी व्यवस्थापन </span>
+            <MenuSquare />
+            <span className="hidden sm:flex">श्रेणी व्यवस्थापन</span>
           </button>
           <button
             onClick={() => setShowForm(true)}
             className="bg-[#0C8033] flex gap-1 sm:gap-4 text-white px-4 py-2 rounded-xl hover:brightness-110 transition-all"
           >
-            <PackagePlus className="" /><span className="hidden sm:flex">नयाँ उत्पादन थप्नुहोस्  </span>
-            
+            <PackagePlus />
+            <span className="hidden sm:flex">नयाँ उत्पादन थप्नुहोस्</span>
           </button>
         </div>
       </div>
 
-      {/* Modals */}
       {showForm && (
         <ProductFormModal
           product={editingProduct}
@@ -78,14 +83,12 @@ export default function DashboardClient({ initialProducts, categories }: Props) 
         />
       )}
 
-      {/* Filters */}
       <ProductFilters
         products={products}
         categories={categories}
         onFilterChange={setFilteredProducts}
       />
 
-      {/* Product List */}
       <ProductList
         products={filteredProducts}
         onEdit={handleEdit}

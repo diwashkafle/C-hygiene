@@ -14,6 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Trash2 } from "lucide-react";
+import { toast } from "sonner"
 
 // 👇 1. UPDATE THE PROPS HERE so TypeScript stops yelling
 export function ProductDeleteButton({
@@ -39,13 +40,14 @@ export function ProductDeleteButton({
       const result = await deleteProduct(productId);
       
       if (result.success) {
+        toast.success("उत्पादन सफलतापूर्वक मेटाइयो");
         router.refresh(); 
       } else {
-        alert(result.error || "Failed to delete");
+        toast.error("उत्पादन मेटाउन असफल भयो");
         router.refresh(); 
       }
     } catch (error) {
-      alert("Something went wrong");
+      toast.error("Something went wrong");
       router.refresh();
     } finally {
       setIsLoading(false);
