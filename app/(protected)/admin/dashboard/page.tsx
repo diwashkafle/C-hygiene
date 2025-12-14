@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getProducts, getCategories } from "@/lib/actions/products";
 import DashboardClient from "@/components/Admin/DashboardClient";
-
+export const dynamic = "force-dynamic";
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
 

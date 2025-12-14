@@ -26,6 +26,7 @@ export default function DashboardClient({ initialProducts, categories }: Props) 
   const handleEdit = (product: Product) => {
     setEditingProduct(product);
     setShowForm(true);
+    router.refresh(); 
   };
 
   const handleCloseForm = useCallback(() => {

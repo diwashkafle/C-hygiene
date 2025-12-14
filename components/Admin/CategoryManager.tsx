@@ -1,4 +1,3 @@
-// components/Admin/CategoryManager.tsx
 "use client";
 
 import { useState } from "react";

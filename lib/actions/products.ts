@@ -113,7 +113,7 @@ export async function createProduct(formData: FormData) {
     }).returning();
 
     revalidatePath("/admin/dashboard");
-    return { success: true, message: "Product created successfully" };
+    return { success: true, message: "Product created successfully",date:newProduct} ;
   } catch (error) {
     console.error("Create product error:", error);
     const errorMessage = error instanceof Error ? error.message : "Failed to create product";
@@ -130,7 +130,7 @@ export async function updateProduct(id: number, formData: FormData) {
     const categoryId = parseInt(formData.get("categoryId") as string);
     const imageUrl = formData.get("imageUrl") as string;
 
-    await db
+    const [updatedProduct] =await db
       .update(productsTable)
       .set({
         name,
@@ -140,10 +140,10 @@ export async function updateProduct(id: number, formData: FormData) {
         imageUrl,
         updatedAt: new Date(),
       })
-      .where(eq(productsTable.id, id));
+      .where(eq(productsTable.id, id)).returning();
 
     revalidatePath("/admin/dashboard");
-    return { success: true, message: "Product updated successfully" };
+    return { success: true, message: "Product updated successfully", date: updatedProduct };
   } catch (error) {
     console.error("Update product error:", error);
     return { success: false, error: "Failed to update product" };

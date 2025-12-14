@@ -5,6 +5,7 @@ import { useState } from "react";
 import { createProduct, updateProduct, Product, Category, createCategory } from "@/lib/actions/products";
 import { X, Plus } from "lucide-react";
 import CloudinaryUploadWidget from "./CloudinaryUploadWidget";
+import { useRouter } from "next/navigation";
 
 type Props = {
   product: Product | null;
@@ -22,6 +23,7 @@ export default function ProductFormModal({ product, categories, onClose }: Props
     product?.categoryId?.toString() || ""
   );
   const [imageUrl, setImageUrl] = useState(product?.imageUrl || "");
+    const router = useRouter();
 
   const handleCreateCategory = async () => {
     if (!newCategoryName.trim()) return;
@@ -34,6 +36,7 @@ export default function ProductFormModal({ product, categories, onClose }: Props
       setSelectedCategoryId(result.data.id.toString());
       setNewCategoryName("");
       setShowNewCategory(false);
+      router.refresh();
     } else {
       alert(result.error || "Failed to create category");
     }
