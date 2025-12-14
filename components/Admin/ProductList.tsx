@@ -1,4 +1,3 @@
-// components/Admin/ProductList.tsx
 "use client";
 
 import Image from "next/image";
@@ -85,7 +84,7 @@ export default function ProductList({ products, onEdit }: Props) {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                    {product.category}
+                    {product.categoryName || "Unknown"}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">

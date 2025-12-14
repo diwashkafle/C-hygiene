@@ -2,19 +2,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Product } from "@/lib/actions/products";
+import { Product, Category } from "@/lib/actions/products";
 
 type Props = {
   products: Product[];
+  categories: Category[];
   onFilterChange: (filtered: Product[]) => void;
 };
 
-export default function ProductFilters({ products, onFilterChange }: Props) {
+export default function ProductFilters({ products, categories, onFilterChange }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("सबै");
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("all");
   const [dateFilter, setDateFilter] = useState("सबै");
-
-  const categories = ["सबै", ...Array.from(new Set(products.map((p) => p.category)))];
 
   useEffect(() => {
     let filtered = [...products];
@@ -29,8 +28,8 @@ export default function ProductFilters({ products, onFilterChange }: Props) {
     }
 
     // Category filter
-    if (selectedCategory !== "सबै") {
-      filtered = filtered.filter((p) => p.category === selectedCategory);
+    if (selectedCategoryId !== "all") {
+      filtered = filtered.filter((p) => p.categoryId === parseInt(selectedCategoryId));
     }
 
     // Date filter
@@ -49,7 +48,7 @@ export default function ProductFilters({ products, onFilterChange }: Props) {
     }
 
     onFilterChange(filtered);
-  }, [searchTerm, selectedCategory, dateFilter, products, onFilterChange]);
+  }, [searchTerm, selectedCategoryId, dateFilter, products, onFilterChange]);
 
   return (
     <div className="bg-white rounded-2xl shadow-sm p-6">
@@ -74,13 +73,14 @@ export default function ProductFilters({ products, onFilterChange }: Props) {
             श्रेणी
           </label>
           <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
+            value={selectedCategoryId}
+            onChange={(e) => setSelectedCategoryId(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0C8033] focus:border-transparent"
           >
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
+            <option value="all">सबै श्रेणी</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
               </option>
             ))}
           </select>

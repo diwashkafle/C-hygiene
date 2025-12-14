@@ -1,32 +1,96 @@
-// app/actions/products.ts
+// lib/actions/products.ts
 "use server";
 
 import { db } from "@/db";
-import { productsTable } from "@/db/schema";
-import { eq, desc, } from "drizzle-orm";
+import { productsTable, categoriesTable } from "@/db/schema";
+import { eq, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+
+export type Category = {
+  id: number;
+  name: string;
+  createdAt: Date;
+};
 
 export type Product = {
   id: number;
   name: string;
   description: string;
   price: number;
-  category: string;
+  categoryId: number;
+  categoryName?: string | null; // For display
   imageUrl: string;
   createdAt: Date;
   updatedAt: Date;
 };
 
-// Get all products
+// Get all categories
+export async function getCategories() {
+  try {
+    const categories = await db
+      .select()
+      .from(categoriesTable)
+      .orderBy(categoriesTable.name);
+    
+    return { success: true, data: categories };
+  } catch (error) {
+    console.error("Get categories error:", error);
+    return { success: false, error: "Failed to fetch categories" };
+  }
+}
+
+// Create category
+export async function createCategory(name: string) {
+  try {
+    const [newCategory] = await db
+      .insert(categoriesTable)
+      .values({ name })
+      .returning();
+
+    revalidatePath("/admin/dashboard");
+    return { success: true, data: newCategory };
+  } catch (error) {
+    console.error("Create category error:", error);
+    return { success: false, error: "Failed to create category" };
+  }
+}
+
+// Delete category
+export async function deleteCategory(id: number) {
+  try {
+    await db.delete(categoriesTable).where(eq(categoriesTable.id, id));
+
+    revalidatePath("/admin/dashboard");
+    return { success: true, message: "Category deleted successfully" };
+  } catch (error) {
+    console.error("Delete category error:", error);
+    // If products exist with this category, it will fail due to foreign key constraint
+    return { success: false, error: "Cannot delete category with existing products" };
+  }
+}
+
+// Get all products with category names
 export async function getProducts() {
   try {
     const products = await db
-      .select()
+      .select({
+        id: productsTable.id,
+        name: productsTable.name,
+        description: productsTable.description,
+        price: productsTable.price,
+        categoryId: productsTable.categoryId,
+        categoryName: categoriesTable.name,
+        imageUrl: productsTable.imageUrl,
+        createdAt: productsTable.createdAt,
+        updatedAt: productsTable.updatedAt,
+      })
       .from(productsTable)
+      .leftJoin(categoriesTable, eq(productsTable.categoryId, categoriesTable.id))
       .orderBy(desc(productsTable.createdAt));
     
     return { success: true, data: products };
   } catch (error) {
+    console.error("Get products error:", error);
     return { success: false, error: "Failed to fetch products" };
   }
 }
@@ -37,21 +101,23 @@ export async function createProduct(formData: FormData) {
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
     const price = parseInt(formData.get("price") as string);
-    const category = formData.get("category") as string;
+    const categoryId = parseInt(formData.get("categoryId") as string);
     const imageUrl = formData.get("imageUrl") as string;
 
-    await db.insert(productsTable).values({
+    const [newProduct] = await db.insert(productsTable).values({
       name,
       description,
       price,
-      category,
+      categoryId,
       imageUrl,
-    });
+    }).returning();
 
     revalidatePath("/admin/dashboard");
     return { success: true, message: "Product created successfully" };
   } catch (error) {
-    return { success: false, error: "Failed to create product" };
+    console.error("Create product error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Failed to create product";
+    return { success: false, error: errorMessage };
   }
 }
 
@@ -61,7 +127,7 @@ export async function updateProduct(id: number, formData: FormData) {
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
     const price = parseInt(formData.get("price") as string);
-    const category = formData.get("category") as string;
+    const categoryId = parseInt(formData.get("categoryId") as string);
     const imageUrl = formData.get("imageUrl") as string;
 
     await db
@@ -70,7 +136,7 @@ export async function updateProduct(id: number, formData: FormData) {
         name,
         description,
         price,
-        category,
+        categoryId,
         imageUrl,
         updatedAt: new Date(),
       })
@@ -79,6 +145,7 @@ export async function updateProduct(id: number, formData: FormData) {
     revalidatePath("/admin/dashboard");
     return { success: true, message: "Product updated successfully" };
   } catch (error) {
+    console.error("Update product error:", error);
     return { success: false, error: "Failed to update product" };
   }
 }
@@ -91,6 +158,7 @@ export async function deleteProduct(id: number) {
     revalidatePath("/admin/dashboard");
     return { success: true, message: "Product deleted successfully" };
   } catch (error) {
+    console.error("Delete product error:", error);
     return { success: false, error: "Failed to delete product" };
   }
 }

@@ -2,22 +2,56 @@
 "use client";
 
 import { useState } from "react";
-import { createProduct, updateProduct, Product } from "@/lib/actions/products";
-import { X } from "lucide-react";
+import { createProduct, updateProduct, Product, Category, createCategory } from "@/lib/actions/products";
+import { X, Plus } from "lucide-react";
+import CloudinaryUploadWidget from "./CloudinaryUploadWidget";
 
 type Props = {
   product: Product | null;
+  categories: Category[];
   onClose: () => void;
 };
 
-export default function ProductFormModal({ product, onClose }: Props) {
+export default function ProductFormModal({ product, categories, onClose }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showNewCategory, setShowNewCategory] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [isCreatingCategory, setIsCreatingCategory] = useState(false);
+  const [localCategories, setLocalCategories] = useState<Category[]>(categories);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>(
+    product?.categoryId?.toString() || ""
+  );
+  const [imageUrl, setImageUrl] = useState(product?.imageUrl || "");
+
+  const handleCreateCategory = async () => {
+    if (!newCategoryName.trim()) return;
+
+    setIsCreatingCategory(true);
+    const result = await createCategory(newCategoryName.trim());
+
+    if (result.success && result.data) {
+      setLocalCategories([...localCategories, result.data]);
+      setSelectedCategoryId(result.data.id.toString());
+      setNewCategoryName("");
+      setShowNewCategory(false);
+    } else {
+      alert(result.error || "Failed to create category");
+    }
+    setIsCreatingCategory(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    if (!imageUrl) {
+      alert("कृपया फोटो अपलोड गर्नुहोस् वा URL राख्नुहोस्");
+      return;
+    }
+
     setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
+    formData.set("imageUrl", imageUrl);
 
     const result = product
       ? await updateProduct(product.id, formData)
@@ -33,7 +67,7 @@ export default function ProductFormModal({ product, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
           <h3 className="text-xl font-bold text-gray-900">
@@ -51,7 +85,7 @@ export default function ProductFormModal({ product, onClose }: Props) {
           {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              उत्पादनको नाम *
+              उत्पादनको नाम * 
             </label>
             <input
               type="text"
@@ -99,31 +133,81 @@ export default function ProductFormModal({ product, onClose }: Props) {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 श्रेणी *
               </label>
-              <select
-                name="category"
-                required
-                defaultValue={product?.category}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0C8033] focus:border-transparent"
-              >
-                <option value="">छान्नुहोस्</option>
-                <option value="कृषि">कृषि</option>
-                <option value="सरसफाई">सरसफाई</option>
-              </select>
+              <div className="space-y-2">
+                {!showNewCategory ? (
+                  <div className="flex gap-2">
+                    <select
+                      name="categoryId"
+                      required
+                      value={selectedCategoryId}
+                      onChange={(e) => setSelectedCategoryId(e.target.value)}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0C8033] focus:border-transparent"
+                    >
+                      <option value="">छान्नुहोस्</option>
+                      {localCategories.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.name}
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={() => setShowNewCategory(true)}
+                      className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                      title="नयाँ श्रेणी थप्नुहोस्"
+                    >
+                      <Plus size={20} />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <input
+                        type="text"
+                        value={newCategoryName}
+                        onChange={(e) => setNewCategoryName(e.target.value)}
+                        placeholder="नयाँ श्रेणी नाम"
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0C8033] focus:border-transparent"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleCreateCategory();
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={handleCreateCategory}
+                        disabled={isCreatingCategory || !newCategoryName.trim()}
+                        className="px-3 py-2 bg-[#0C8033] text-white rounded-lg hover:brightness-110 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isCreatingCategory ? "..." : "थप्नुहोस्"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowNewCategory(false);
+                          setNewCategoryName("");
+                        }}
+                        className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                      >
+                        <X size={20} />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Image URL */}
+          {/* Image Upload */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              फोटो URL *
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              उत्पादनको फोटो *
             </label>
-            <input
-              type="url"
-              name="imageUrl"
-              required
-              defaultValue={product?.imageUrl}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0C8033] focus:border-transparent"
-              placeholder="https://example.com/image.jpg"
+            <CloudinaryUploadWidget
+              value={imageUrl}
+              onChange={setImageUrl}
             />
           </div>
 

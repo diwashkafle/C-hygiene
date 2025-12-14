@@ -1,0 +1,1 @@
+ALTER TABLE "Products" ADD COLUMN "category" varchar(100) NOT NULL;

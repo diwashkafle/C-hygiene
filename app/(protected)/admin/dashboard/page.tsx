@@ -2,7 +2,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { getProducts } from "@/lib/actions/products";
+import { getProducts, getCategories } from "@/lib/actions/products";
 import DashboardClient from "@/components/Admin/DashboardClient";
 
 export default async function DashboardPage() {
@@ -12,8 +12,13 @@ export default async function DashboardPage() {
     redirect("/admin-auth/login");
   }
 
-  const result = await getProducts();
-  const products = result.success && result.data ? result.data : [];
+  const [productsResult, categoriesResult] = await Promise.all([
+    getProducts(),
+    getCategories(),
+  ]);
 
-  return <DashboardClient initialProducts={products} />;
+  const products = productsResult.success && productsResult.data ? productsResult.data : [];
+  const categories = categoriesResult.success && categoriesResult.data ? categoriesResult.data : [];
+
+  return <DashboardClient initialProducts={products} categories={categories} />;
 }
